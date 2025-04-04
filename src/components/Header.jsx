@@ -1,44 +1,46 @@
-import React, {useEffect, useState} from 'react'
-import {Link, useParams} from "react-router-dom";
-import { House } from 'lucide-react';
-import Footer from "./Footer.jsx"
-import Header from "./Header.jsx"
-const Recipe = () => {
-    const {id} = useParams();
-    const [recipe, setRecipe] = useState(null);
-    const [loading, setLoading] = useState(true);
-    useEffect(() => {
-        fetch(`https://dummyjson.com/recipes/${id}`)
-            .then((res) => res.json())
-            .then((data) => {
-                setRecipe(data);
-                setLoading(false);
-            })
-            .catch((error) => console.error("Error fetching recipes:", error));
-    }, [id])
-    if(loading){
-        return <div>Loading...</div>;
-    }
+import { SquareChevronDown, X } from "lucide-react";
+import { useState } from "react";
+import { Utensils } from 'lucide-react';
+
+const Header = () => {
+    const scrollToFooter = () => {
+        document.getElementById("footer").scrollIntoView({ behavior: "smooth" });
+    };
+
+    const [isVisible, setIsVisible] = useState(false);
+
     return (
-        <div>
-            <Header/>
-            <div className="max-w-2xl mx-auto p-6 bg-[#FFFADA] shadow-lg rounded-lg text-black mt-10">
-                <h1 className="text-3xl font-bold text-center">{recipe.name}</h1>
-                <img
-                    src={recipe.image}
-                    alt={recipe.name}
-                    className="w-full h-64 object-cover rounded-md mt-4"
-                />
-                <p className="border-l-4 border-red-600 mt-4 bg-red-200 p-4"><strong>Ingredients:</strong> {recipe.ingredients.join(", ")}</p>
-                <p className="mt-2 border-l-4 border-yellow-600 bg-yellow-200 p-4"><strong>Instructions:</strong> {recipe.instructions}</p>
-                <button className={"bg-[#ee4444] rounded-3xl text-white mt-2"}>
-                    <Link to="/" className="p-2 hover:scale-110 flex flex-row items-center">
-                        <House className={""}/>
-                    </Link>
+        <header>
+            <div className="bg-[#ee4444] h-12 text-white text-xl flex items-center justify-between px-6 md:px-12">
+                <ul className="hidden md:flex space-x-10">
+                    <li><a href="/" className="hover:underline">Home</a></li>
+                    <li><a href="#" className="hover:underline">Contact</a></li>
+                    <li><button onClick={scrollToFooter} className="hover:underline">Details</button></li>
+                </ul>
+
+                <button className="md:hidden" onClick={() => setIsVisible(true)}>
+                    <SquareChevronDown size={28} />
                 </button>
             </div>
-            <Footer/>
-        </div>
-    )
-}
-export default Recipe
+
+            <div className={`fixed top-0 left-0 w-full h-full bg-[#ee4444] text-white flex flex-col items-center justify-center space-y-6 transform ${isVisible ? "translate-y-0" : "-translate-y-full"} transition-transform duration-300 md:hidden`}>
+                <button className="absolute top-4 right-4" onClick={() => setIsVisible(false)}>
+                    <X size={28} />
+                </button>
+
+                <ul className="flex flex-col space-y-6 text-2xl">
+                    <li><a href="#" className="hover:underline" onClick={() => setIsVisible(false)}>Home</a></li>
+                    <li><a href="#" className="hover:underline" onClick={() => setIsVisible(false)}>Contact</a></li>
+                    <li><button onClick={() => { scrollToFooter(); setIsVisible(false); }} className="hover:underline">Details</button></li>
+                </ul>
+            </div>
+
+            <div className={"absolute top-[13px] left-[1100px] flex flex-row gap-2"}>
+                <Utensils className={"text-white"}/>
+                <p className={"font-bold text-white"}>Recipe Explorer</p>
+            </div>
+        </header>
+    );
+};
+
+export default Header;
