@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import {Link, useParams} from "react-router-dom";
 import { House } from 'lucide-react';
+import Footer from "./Footer.jsx"
+import Header from "./Header.jsx"
 const Recipe = () => {
     const {id} = useParams();
     const [recipe, setRecipe] = useState(null);
@@ -19,6 +21,7 @@ const Recipe = () => {
     }
     return (
         <div>
+            <Header/>
             <div className="max-w-2xl mx-auto p-6 bg-[#FFFADA] shadow-lg rounded-lg text-black mt-10">
                 <h1 className="text-3xl font-bold text-center">{recipe.name}</h1>
                 <img
@@ -34,6 +37,7 @@ const Recipe = () => {
                     </Link>
                 </button>
             </div>
+            <Footer/>
         </div>
     )
 }
